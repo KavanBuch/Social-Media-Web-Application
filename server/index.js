@@ -23,8 +23,8 @@ app.use(cors());
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 app.use(express.static(path.join(__dirname, "public")));
+
 const sessionConfig = {
   secret: process.env.SECRET,
   resave: false,
@@ -47,6 +47,12 @@ passport.deserializeUser(User.deserializeUser());
 app.use("/", authRoutes);
 app.use("/posts", postRoutes);
 app.use("/user", profilePictureRoutes);
+
+app.use((err, req, res, next) => {
+  const { statusCode = 500 } = err;
+  if (!err.message) err.message = "Oh No, Something Went Wrong!";
+  res.status(statusCode).render("error", { err });
+});
 
 const port = process.env.PORT || 80;
 const CONNECTION_URL = process.env.CONNECTION_URL;

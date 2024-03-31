@@ -23,7 +23,6 @@ router.post(
   "/uploadProfilePicture",
   upload.single("profilePicture"),
   (req, res) => {
-    res.json(req.file);
     res.json(req.file.path);
   }
 );
