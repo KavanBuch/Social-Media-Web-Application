@@ -8,12 +8,13 @@ import passport from "passport";
 import LocalStrategy from "passport-local";
 import path from "path";
 import { fileURLToPath } from "url";
-import User from "./Models/users.js";
+import User from "./models/users.js";
 
 dotenv.config();
 
 import postRoutes from "./routes/posts.js";
 import authRoutes from "./routes/users.js";
+import profilePictureRoutes from "./routes/profilePicture.js";
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -45,6 +46,7 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use("/", authRoutes);
 app.use("/posts", postRoutes);
+app.use("/user", profilePictureRoutes);
 
 const port = process.env.PORT || 80;
 const CONNECTION_URL = process.env.CONNECTION_URL;
