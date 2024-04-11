@@ -1,23 +1,24 @@
 const styles = {
-  root: {
-    "& .MuiTextField-root": {
-      margin: theme.spacing(1),
-    },
-  },
   paper: {
-    padding: theme.spacing(2),
+    padding: "20px",
+    marginBottom: "20px",
   },
   form: {
     display: "flex",
-    flexWrap: "wrap",
-    justifyContent: "center",
+    flexDirection: "column",
+  },
+  textField: {
+    marginBottom: "20px",
   },
   fileInput: {
-    width: "97%",
-    margin: "10px 0",
+    marginTop: "20px",
+    marginBottom: "20px",
   },
-  buttonSubmit: {
-    marginBottom: 10,
+  submitButton: {
+    marginTop: "20px",
+  },
+  clearButton: {
+    marginTop: "10px",
   },
 };
 

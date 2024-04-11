@@ -17,9 +17,13 @@ import authRoutes from "./routes/users.js";
 import profilePictureRoutes from "./routes/profilePicture.js";
 
 const app = express();
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json({ extended: true }));
-app.use(cors());
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
+app.use(bodyParser.json({ limit: "50mb", extended: true }));
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  })
+);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -51,7 +55,7 @@ app.use("/user", profilePictureRoutes);
 app.use((err, req, res, next) => {
   const { statusCode = 500 } = err;
   if (!err.message) err.message = "Oh No, Something Went Wrong!";
-  res.status(statusCode).render("error", { err });
+  res.status(statusCode).json({ err });
 });
 
 const port = process.env.PORT || 80;

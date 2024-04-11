@@ -1,51 +1,41 @@
 const styles = {
-  media: {
-    height: 0,
-    paddingTop: "56.25%",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    backgroundBlendMode: "darken",
-  },
-  border: {
-    border: "solid",
-  },
-  fullHeightCard: {
-    height: "100%",
-  },
   card: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    borderRadius: "15px",
-    height: "100%",
-    position: "relative",
+    marginBottom: 2,
+    boxShadow: 1,
+    borderRadius: 1,
   },
-  overlay: {
-    position: "absolute",
-    top: "20px",
-    left: "20px",
-    color: "white",
+  cardContent: {
+    padding: 2,
   },
-  overlay2: {
-    position: "absolute",
-    top: "20px",
-    right: "20px",
-    color: "white",
+  cardMedia: {
+    height: 200,
+    backgroundSize: "cover",
   },
-  grid: {
-    display: "flex",
+  creator: {
+    fontWeight: "bold",
   },
-  details: {
-    display: "flex",
-    justifyContent: "space-between",
-    margin: "20px",
+  createdAt: {
+    color: "text.secondary",
+    fontSize: "0.9rem",
+  },
+  tags: {
+    color: "primary.main",
+    marginTop: 1,
+    marginBottom: 2,
   },
   title: {
-    padding: "0 16px",
+    marginBottom: 1,
+    fontSize: "1.2rem",
   },
-  cardActions: {
-    padding: "0 16px 8px 16px",
-    display: "flex",
-    justifyContent: "space-between",
+  message: {
+    fontSize: "1rem",
+    lineHeight: 1.5,
+  },
+  button: {
+    color: "primary.main",
+  },
+  moreIcon: {
+    color: "text.secondary",
   },
 };
 

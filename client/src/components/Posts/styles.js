@@ -1,13 +1,10 @@
 const styles = {
-  mainContainer: {
-    display: "flex",
-    alignItems: "center",
+  circularProgress: {
+    margin: "auto",
+    display: "block",
   },
-  smMargin: {
-    margin: theme.spacing(1),
-  },
-  actionDiv: {
-    textAlign: "center",
+  gridContainer: {
+    marginTop: "20px",
   },
 };
 
