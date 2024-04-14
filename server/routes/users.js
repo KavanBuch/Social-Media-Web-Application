@@ -34,4 +34,11 @@ router.post("/login", passport.authenticate("local", {}), (req, res) => {
   res.json({ success: "logged you in!!" });
 });
 
+router.post("/logout", (req, res) => {
+  req.logout((e) => {
+    if (e) return res.json(e);
+    return res.json({ success: "logged you out!!" });
+  });
+});
+
 export default router;

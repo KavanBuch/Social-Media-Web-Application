@@ -1,11 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./styles";
 import logo from "../../images/logo.jpg";
 import { Typography, AppBar, Avatar, Toolbar, Button } from "@mui/material";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../../reducers/auth";
+import * as api from "../../api/index";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-  const user = null;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  useEffect(() => {
+    dispatch(setUser());
+  }, []);
+  const user = useSelector((state) => state.user.user);
+
+  const handleSubmit = async () => {
+    const { data } = await api.logoutUser();
+    if (data.success) {
+      localStorage.clear();
+      dispatch(setUser());
+      navigate("/");
+    }
+  };
+
   return (
     <AppBar sx={styles.appBar} position="static" color="inherit">
       <div style={styles.brandContainer}>
@@ -23,19 +42,11 @@ const Navbar = () => {
       <Toolbar sx={styles.toolbar}>
         {user ? (
           <div style={styles.profile}>
-            <Avatar
-              sx={styles.purple}
-              alt={user.result.name}
-              src={user.result.imageURL}
-            >
-              {user.result.name.charAt(0)}
-            </Avatar>
-            <Typography sx={styles.userName} variant="h6">
-              {user.result.name}
-            </Typography>
-            <Button variant="contained" color="secondary">
-              Logout
-            </Button>
+            <form onSubmit={handleSubmit}>
+              <Button variant="contained" color="secondary" type="submit">
+                Logout
+              </Button>
+            </form>
           </div>
         ) : (
           <Button

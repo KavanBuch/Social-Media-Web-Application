@@ -2,7 +2,7 @@ import axios from "axios";
 const url = "http://localhost:80";
 
 export const fetchPosts = () => {
-  return axios.get(`${url}/posts`);
+  return axios.get(`${url}/posts`, { withCredentials: true });
 };
 
 export const createPost = (newPost) => {
@@ -27,4 +27,8 @@ export const registerUser = (user) => {
 
 export const loginUser = (user) => {
   return axios.post(`${url}/login`, user, { withCredentials: true });
+};
+
+export const logoutUser = () => {
+  return axios.post(`${url}/logout`, { withCredentials: true });
 };

@@ -6,10 +6,12 @@ import { configureStore } from "@reduxjs/toolkit";
 import postsSlice from "./reducers/posts.js";
 import { combineReducers } from "redux";
 import postSlice from "./reducers/post.js";
+import userSlice from "./reducers/auth.js";
 
 const reducers = combineReducers({
   posts: postsSlice,
   post: postSlice,
+  user: userSlice,
 });
 
 const store = configureStore({

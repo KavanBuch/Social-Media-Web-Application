@@ -1,25 +1,19 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import * as api from "../api/index";
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   user: null,
-  isLoading: false,
-  error: null,
 };
-
-export const registerUser = createAsyncThunk("registerUser", async (user) => {
-  const { currentUser } = await api.registerUser(user);
-  return currentUser;
-});
 
 export const userSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder.addCase(registerUser.fulfilled, (state, action) => {
-      state.isLoading = false;
-      state.user = action.payload._id;
-    });
+  reducers: {
+    setUser: (state) => {
+      const loggedInUser = localStorage.getItem("user");
+      state.user = loggedInUser ? loggedInUser : null;
+    },
   },
 });
+
+export const { setUser } = userSlice.actions;
+export default userSlice.reducer;

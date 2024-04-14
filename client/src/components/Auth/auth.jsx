@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./styles";
 import {
   Avatar,
@@ -7,46 +7,51 @@ import {
   Grid,
   Typography,
   Container,
+  Alert,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Input from "./input";
 import { registerUser, loginUser } from "../../api/index";
 import { useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { setUser } from "../../reducers/auth";
+import { useDispatch } from "react-redux";
 
-const initialState = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  username: "",
-  password: "",
-  confirmPassword: "",
-};
+const validationSchema = Yup.object().shape({
+  firstName: Yup.string().required("First name is required"),
+  lastName: Yup.string().required("Last name is required"),
+  email: Yup.string()
+    .email("Invalid email address")
+    .required("Email is required"),
+  username: Yup.string()
+    .min(3, "Username must be at least 3 characters")
+    .max(20, "Username cannot exceed 20 characters")
+    .required("Username is required"),
+  password: Yup.string()
+    .min(6, "Password must be at least 6 characters")
+    .max(8, "Password cannot exceed 8 characters")
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,8}$/,
+      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+    )
+    .required("Password is required"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password"), null], "Passwords must match")
+    .required("Confirm password is required"),
+});
+
+const loginSchema = Yup.object().shape({
+  username: Yup.string().required("username is required"),
+  password: Yup.string().required("password is required"),
+});
 
 const Auth = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [form, setForm] = useState(initialState);
   const [showPassword, setShowPassword] = useState(false);
   const [isSignup, setIsSignUp] = useState(false);
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    let success = null;
-    if (isSignup) {
-      const message = await registerUser(form);
-      success = message.data.success;
-    } else {
-      const message = await loginUser({
-        username: form.username,
-        password: form.password,
-      });
-      success = message.data.success;
-    }
-    if (success) {
-      return navigate("/");
-    }
-  };
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const [correctCredentials, setCorrectCredentials] = useState(true);
   const handleShowPassword = () => {
     setShowPassword((prevShowPassword) => {
       return !prevShowPassword;
@@ -60,6 +65,58 @@ const Auth = () => {
       return !prevIsSignup;
     });
   };
+
+  const formik = useFormik({
+    initialValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      username: "",
+      password: "",
+      confirmPassword: "",
+    },
+    validationSchema: validationSchema,
+    validateOnChange: true,
+    validateOnBlur: true,
+    onSubmit: async (form) => {
+      let success = null;
+      const message = await registerUser(form);
+      success = message.data.success;
+      if (success) {
+        localStorage.setItem("user", form.username);
+        dispatch(setUser());
+        return navigate("/");
+      }
+    },
+  });
+
+  const loginFormik = useFormik({
+    initialValues: {
+      username: "",
+      password: "",
+    },
+    validationSchema: loginSchema,
+    onSubmit: async (form) => {
+      try {
+        let success = null;
+        const message = await loginUser(form);
+        success = message.data.success;
+        if (success) {
+          localStorage.setItem("user", form.username);
+          dispatch(setUser());
+          return navigate("/");
+        }
+      } catch (error) {
+        console.log(error);
+        setCorrectCredentials(false);
+      }
+    },
+  });
+
+  useEffect(() => {
+    setCorrectCredentials(true);
+  }, []);
+
   return (
     <Container component="main" maxWidth="xs">
       <Paper sx={styles.paper} elevation={3}>
@@ -69,49 +126,117 @@ const Auth = () => {
         <Typography component="h1" variant="h5">
           {isSignup ? "Sign up" : "Sign in"}
         </Typography>
-        <form style={styles.form} onSubmit={handleSubmit}>
+        {!correctCredentials && (
+          <Alert severity="error">Invalid Credentials</Alert>
+        )}
+        <form
+          style={styles.form}
+          onSubmit={isSignup ? formik.handleSubmit : loginFormik.handleSubmit}
+        >
           <Grid container spacing={2}>
             {isSignup && (
               <>
                 <Input
                   name="firstName"
+                  value={formik.values.firstName}
                   label="First Name"
-                  handleChange={handleChange}
+                  handleChange={formik.handleChange}
+                  handleBlur={formik.handleBlur}
                   autoFocus
                   half
+                  error={
+                    formik.touched.firstName && Boolean(formik.errors.firstName)
+                  }
+                  helperText={
+                    formik.touched.firstName && formik.errors.firstName
+                  }
                 />
                 <Input
                   name="lastName"
+                  value={formik.values.lastName}
                   label="Last Name"
-                  handleChange={handleChange}
+                  handleChange={formik.handleChange}
+                  handleBlur={formik.handleBlur}
                   half
+                  error={
+                    formik.touched.lastName && Boolean(formik.errors.lastName)
+                  }
+                  helperText={formik.touched.lastName && formik.errors.lastName}
                 />
                 <Input
                   name="email"
+                  value={formik.values.email}
                   label="Email Address"
-                  handleChange={handleChange}
+                  handleChange={formik.handleChange}
+                  handleBlur={formik.handleBlur}
                   type="email"
+                  error={formik.touched.email && Boolean(formik.errors.email)}
+                  helperText={formik.touched.email && formik.errors.email}
                 />
               </>
             )}
             <Input
               name="username"
+              value={
+                isSignup ? formik.values.username : loginFormik.values.username
+              }
               label="username"
-              handleChange={handleChange}
+              handleChange={
+                isSignup ? formik.handleChange : loginFormik.handleChange
+              }
+              handleBlur={isSignup ? formik.handleBlur : loginFormik.handleBlur}
+              error={
+                isSignup
+                  ? formik.touched.username && Boolean(formik.errors.username)
+                  : loginFormik.touched.username &&
+                    Boolean(loginFormik.errors.username)
+              }
+              helperText={
+                isSignup
+                  ? formik.touched.username && formik.errors.username
+                  : loginFormik.touched.username && loginFormik.errors.username
+              }
             />
             <Input
               name="password"
               label="Password"
-              handleChange={handleChange}
+              value={
+                isSignup ? formik.values.password : loginFormik.values.password
+              }
+              handleChange={
+                isSignup ? formik.handleChange : loginFormik.handleChange
+              }
+              handleBlur={isSignup ? formik.handleBlur : loginFormik.handleBlur}
               type={showPassword ? "text" : "password"}
               handleShowPassword={handleShowPassword}
+              error={
+                isSignup
+                  ? formik.touched.password && Boolean(formik.errors.password)
+                  : loginFormik.touched.password &&
+                    Boolean(loginFormik.errors.password)
+              }
+              helperText={
+                isSignup
+                  ? formik.touched.password && formik.errors.password
+                  : loginFormik.touched.password && loginFormik.errors.password
+              }
             />
             {isSignup && (
               <Input
                 name="confirmPassword"
+                value={formik.values.confirmPassword}
                 label="Repeat Password"
-                handleChange={handleChange}
+                handleChange={formik.handleChange}
+                handleBlur={formik.handleBlur}
                 type="password"
+                error={
+                  formik.touched.confirmPassword &&
+                  Boolean(formik.errors.confirmPassword)
+                }
+                helperText={
+                  formik.touched.confirmPassword &&
+                  formik.errors.confirmPassword
+                }
               />
             )}
           </Grid>
