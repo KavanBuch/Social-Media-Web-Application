@@ -6,21 +6,23 @@ const router = express.Router();
 
 router.post("/register", async (req, res) => {
   try {
-    const { email, username, password, firstName, lastName, dateOfBirth } =
+    const { email, username, password, firstName, lastName, confirmPassword } =
       req.body;
+    if (confirmPassword != password) {
+      return res.json({ error: "passwords don't match" });
+    }
     const user = new User({
       email,
       username,
       firstName,
       lastName,
-      dateOfBirth,
     });
     const registeredUser = await User.register(user, password);
     req.login(registeredUser, (err) => {
       if (err) {
         return res.json(e);
       }
-      res.json(registeredUser);
+      res.json({ success: "registered the user" });
     });
   } catch (e) {
     console.log(e);
@@ -28,7 +30,8 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/login", passport.authenticate("local", {}), (req, res) => {
-  res.send("logged in!!");
+  console.log(req.session);
+  res.json({ success: "logged you in!!" });
 });
 
 export default router;

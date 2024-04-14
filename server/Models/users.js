@@ -16,13 +16,6 @@ const userSchema = new Schema({
     required: true,
     unique: true,
   },
-  dateOfBirth: {
-    type: Date,
-    required: true,
-  },
-  profilePicture: {
-    type: String,
-  },
 });
 
 userSchema.plugin(passportLocalMongoose);
