@@ -6,19 +6,25 @@ export const fetchPosts = () => {
 };
 
 export const createPost = (newPost) => {
-  return axios.post(`${url}/posts`, newPost);
+  return axios.post(`${url}/posts`, newPost, { withCredentials: true });
 };
 
 export const likePost = (id) => {
-  return axios.patch(`${url}/posts/${id}/likePost`);
+  return axios.patch(
+    `${url}/posts/${id}/likePost`,
+    {},
+    { withCredentials: true }
+  );
 };
 
 export const updatePost = (id, updatedPost) => {
-  return axios.patch(`${url}/posts/${id}`, updatedPost);
+  return axios.patch(`${url}/posts/${id}`, updatedPost, {
+    withCredentials: true,
+  });
 };
 
 export const deletePost = (id) => {
-  return axios.delete(`${url}/posts/${id}`);
+  return axios.delete(`${url}/posts/${id}`, { withCredentials: true });
 };
 
 export const registerUser = (user) => {

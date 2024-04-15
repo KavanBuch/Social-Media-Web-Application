@@ -9,6 +9,7 @@ import LocalStrategy from "passport-local";
 import path from "path";
 import { fileURLToPath } from "url";
 import User from "./models/users.js";
+import mongoStore from "connect-mongo";
 
 dotenv.config();
 
@@ -34,6 +35,9 @@ const sessionConfig = {
   secret: process.env.SECRET,
   resave: false,
   saveUninitialized: true,
+  store: mongoStore.create({
+    mongoUrl: process.env.CONNECTION_URL,
+  }),
   cookie: {
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
     maxAge: 1000 * 60 * 60 * 24 * 7,

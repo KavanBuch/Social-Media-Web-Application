@@ -5,11 +5,13 @@ import FileBase from "react-file-base64";
 import { useDispatch, useSelector } from "react-redux";
 import { createPost, updatePost } from "../../reducers/posts";
 import { setPostId } from "../../reducers/post";
+import { setUser } from "../../reducers/auth";
 
 const Form = () => {
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
   const [postData, setPostData] = useState({
-    creator: "",
+    creator: user,
     title: "",
     message: "",
     tags: [],
@@ -18,7 +20,7 @@ const Form = () => {
 
   const clear = () => {
     setPostData({
-      creator: "",
+      creator: user,
       title: "",
       message: "",
       tags: [],
@@ -47,6 +49,10 @@ const Form = () => {
     if (post) setPostData(post);
   }, [post]);
 
+  useEffect(() => {
+    dispatch(setUser());
+  }, []);
+
   return (
     <Paper sx={styles.paper}>
       <form
@@ -60,7 +66,7 @@ const Form = () => {
         </Typography>
         <TextField
           name="creator"
-          variant="outlined"
+          variant="filled"
           label="creator"
           fullWidth
           value={postData.creator}
@@ -68,6 +74,7 @@ const Form = () => {
             setPostData({ ...postData, creator: e.target.value })
           }
           sx={styles.textField}
+          inputProps={{ readOnly: true }}
         />
         <TextField
           name="title"
@@ -117,8 +124,9 @@ const Form = () => {
           type="submit"
           fullWidth
           sx={styles.submitButton}
+          disabled={!user}
         >
-          Submit
+          {user ? "Submit" : "LogIn to Create a Post"}
         </Button>
         <Button
           variant="contained"
