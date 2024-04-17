@@ -49,7 +49,7 @@ const Post = ({ post }) => {
   }, []);
 
   return (
-    <Card sx={styles.card}>
+    <Card sx={styles.card} raised elavation={6}>
       <CardMedia
         sx={styles.cardMedia}
         image={post.selectedFile || defaultPost}

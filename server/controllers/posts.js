@@ -6,9 +6,34 @@ import PostMessage from "../models/postMessage.js";
 const router = express.Router();
 
 export const getPosts = async (req, res) => {
+  const { page } = req.query;
   try {
-    const postMessages = await PostMessage.find();
-    res.status(200).json(postMessages);
+    const MAX_LIMIT = 4;
+    const startIndex = (Number(page) - 1) * MAX_LIMIT;
+    const total = await PostMessage.countDocuments({});
+
+    const postMessages = await PostMessage.find()
+      .sort({ _id: -1 })
+      .limit(MAX_LIMIT)
+      .skip(startIndex);
+    res.status(200).json({
+      data: postMessages,
+      currentPage: Number(page),
+      numberOfPages: Math.ceil(total / MAX_LIMIT),
+    });
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
+export const fetchPostsBySearch = async (req, res) => {
+  const { searchQuery, tags } = req.query;
+  try {
+    const title = new RegExp(searchQuery, "i");
+    const posts = await PostMessage.find({
+      $or: [{ title }, { tags: { $in: tags.split(",") } }],
+    });
+    res.json(posts);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }

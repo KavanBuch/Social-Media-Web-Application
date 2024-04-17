@@ -5,12 +5,22 @@ const initialState = {
   posts: [],
   isLoading: false,
   error: null,
+  currentPage: 1,
+  numberOfPages: 1,
 };
 
-export const fetchPosts = createAsyncThunk("fetchPosts", async () => {
-  const { data } = await api.fetchPosts();
+export const fetchPosts = createAsyncThunk("fetchPosts", async (page) => {
+  const { data } = await api.fetchPosts(page);
   return data;
 });
+
+export const fetchPostsBySearch = createAsyncThunk(
+  "fetchPostsBySearch",
+  async (searchQuery) => {
+    const { data } = await api.fetchPostsBySearch(searchQuery);
+    return data;
+  }
+);
 
 export const createPost = createAsyncThunk("createPost", async (post) => {
   const { data } = await api.createPost(post);
@@ -45,7 +55,9 @@ export const postsSlice = createSlice({
     });
     builder.addCase(fetchPosts.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.posts = action.payload;
+      state.posts = action.payload.data;
+      state.currentPage = action.payload.currentPage;
+      state.numberOfPages = action.payload.numberOfPages;
     });
     builder.addCase(fetchPosts.rejected, (state, action) => {
       state.isLoading = false;
@@ -78,6 +90,10 @@ export const postsSlice = createSlice({
       state.posts = state.posts.filter((post) => {
         if (post._id != action.payload._id) return post;
       });
+    });
+    builder.addCase(fetchPostsBySearch.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.posts = action.payload;
     });
   },
 });

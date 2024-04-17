@@ -34,7 +34,6 @@ const Form = () => {
   const post = posts.find((post) => {
     return post._id == post_id;
   });
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (post_id) {
@@ -53,6 +52,13 @@ const Form = () => {
     dispatch(setUser());
   }, []);
 
+  useEffect(() => {
+    setPostData((prevPostData) => ({
+      ...prevPostData,
+      creator: user,
+    }));
+  }, [user]);
+
   return (
     <Paper sx={styles.paper}>
       <form
@@ -67,7 +73,7 @@ const Form = () => {
         <TextField
           name="creator"
           variant="filled"
-          label="creator"
+          label=""
           fullWidth
           value={postData.creator}
           onChange={(e) =>

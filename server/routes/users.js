@@ -40,4 +40,9 @@ router.post("/logout", (req, res) => {
   });
 });
 
+router.post("/currentUser", (req, res) => {
+  const currentUser = req?.session?.passport?.user;
+  res.json(currentUser);
+});
+
 export default router;

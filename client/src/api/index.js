@@ -1,8 +1,17 @@
 import axios from "axios";
 const url = "http://localhost:80";
 
-export const fetchPosts = () => {
-  return axios.get(`${url}/posts`, { withCredentials: true });
+export const fetchPosts = (page) => {
+  return axios.get(`${url}/posts?page=${page}`, { withCredentials: true });
+};
+
+export const fetchPostsBySearch = (searchQuery) => {
+  return axios.get(
+    `${url}/posts/search?searchQuery=${searchQuery.search || "none"}&tags=${
+      searchQuery.tags
+    }`,
+    { withCredentials: true }
+  );
 };
 
 export const createPost = (newPost) => {
@@ -37,4 +46,8 @@ export const loginUser = (user) => {
 
 export const logoutUser = () => {
   return axios.post(`${url}/logout`, { withCredentials: true });
+};
+
+export const getCurrentUser = () => {
+  return axios.post(`${url}/currentUser`, {}, { withCredentials: true });
 };
