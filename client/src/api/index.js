@@ -32,6 +32,16 @@ export const likePost = (id) => {
   );
 };
 
+export const commentPost = (value, id) => {
+  return axios.post(
+    `${url}/posts/${id}/commentPost`,
+    { value },
+    {
+      withCredentials: true,
+    }
+  );
+};
+
 export const updatePost = (id, updatedPost) => {
   return axios.patch(`${url}/posts/${id}`, updatedPost, {
     withCredentials: true,

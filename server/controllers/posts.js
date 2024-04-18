@@ -41,7 +41,6 @@ export const fetchPostsBySearch = async (req, res) => {
 
 export const getPost = async (req, res) => {
   const { id } = req.params;
-  console.log(id);
   try {
     const post = await PostMessage.findById(id);
     res.status(200).json(post);
@@ -123,6 +122,26 @@ export const likePost = async (req, res) => {
     new: true,
   });
   res.status(200).json(updatedPost);
+};
+
+export const commentPost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { value } = req.body;
+    const user = req?.session?.passport?.user;
+    if (!user) {
+      return res.status(400).json({ error: "Unauthorized" });
+    }
+    const post = await PostMessage.findById(id);
+    post.comments.push(value);
+    const updatedPost = await PostMessage.findByIdAndUpdate(id, post, {
+      new: true,
+    });
+    console.log(updatedPost);
+    res.status(200).json(updatedPost);
+  } catch (error) {
+    res.status(400).json(error.message);
+  }
 };
 
 export default router;

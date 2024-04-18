@@ -8,6 +8,7 @@ import moment from "moment";
 import styles from "./styles";
 import { fetchPostsBySearch } from "../../reducers/posts";
 import { useNavigate } from "react-router-dom";
+import CommentSection from "./commentSection";
 
 const postDetails = () => {
   const { id } = useParams();
@@ -68,6 +69,9 @@ const postDetails = () => {
           <Typography variant="body1">
             {moment(post.createdAt).fromNow()}
           </Typography>
+          <Divider style={{ margin: "20px 0" }} />
+          <CommentSection post={post} />
+          <Divider style={{ margin: "20px 0" }} />
         </div>
         <div style={styles.imageSection}>
           <img
