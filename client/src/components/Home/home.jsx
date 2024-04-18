@@ -16,12 +16,15 @@ import Pagination from "../Pagination/pagination";
 import styles from "./styles";
 import { fetchPostsBySearch } from "../../reducers/posts";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 const Home = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
 
   const page = searchParams.get("page") || 1;
+  const searchQuery = searchParams.get("searchQuery");
 
   const [search, setSearch] = useState("");
   const [tags, setTags] = useState([]);
@@ -40,7 +43,7 @@ const Home = () => {
   };
 
   const searchPost = () => {
-    if (search.trim() || tags) {
+    if (search.trim() || tags.length) {
       console.log(search);
       dispatch(fetchPostsBySearch({ search, tags: tags.join(",") }));
       navigate(
@@ -119,7 +122,7 @@ const Home = () => {
             </AppBar>
             <Form />
             <Paper elevation={6}>
-              <Pagination page={page} />
+              {!searchQuery && !tags.length && <Pagination page={page} />}
             </Paper>
           </Grid>
         </Grid>

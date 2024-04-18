@@ -14,6 +14,12 @@ export const fetchPostsBySearch = (searchQuery) => {
   );
 };
 
+export const getPost = (id) => {
+  return axios.get(`${url}/posts/${id}`, {
+    withCredentials: true,
+  });
+};
+
 export const createPost = (newPost) => {
   return axios.post(`${url}/posts`, newPost, { withCredentials: true });
 };
@@ -45,7 +51,7 @@ export const loginUser = (user) => {
 };
 
 export const logoutUser = () => {
-  return axios.post(`${url}/logout`, { withCredentials: true });
+  return axios.post(`${url}/logout`, {}, { withCredentials: true });
 };
 
 export const getCurrentUser = () => {

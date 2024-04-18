@@ -3,6 +3,7 @@ import * as api from "../api/index";
 
 const initialState = {
   posts: [],
+  post: null,
   isLoading: false,
   error: null,
   currentPage: 1,
@@ -21,6 +22,11 @@ export const fetchPostsBySearch = createAsyncThunk(
     return data;
   }
 );
+
+export const getPost = createAsyncThunk("getPost", async (id) => {
+  const { data } = await api.getPost(id);
+  return data;
+});
 
 export const createPost = createAsyncThunk("createPost", async (post) => {
   const { data } = await api.createPost(post);
@@ -94,6 +100,13 @@ export const postsSlice = createSlice({
     builder.addCase(fetchPostsBySearch.fulfilled, (state, action) => {
       state.isLoading = false;
       state.posts = action.payload;
+    });
+    builder.addCase(getPost.pending, (state, action) => {
+      state.isLoading = true;
+    });
+    builder.addCase(getPost.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.post = action.payload;
     });
   },
 });

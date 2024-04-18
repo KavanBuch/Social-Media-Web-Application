@@ -9,6 +9,7 @@ const styles = {
   },
   cardMedia: {
     height: 200,
+    width: 400,
     backgroundSize: "cover",
   },
   creator: {
@@ -36,6 +37,10 @@ const styles = {
   },
   moreIcon: {
     color: "text.secondary",
+  },
+  cardAction: {
+    display: "block",
+    textAlign: "initial",
   },
 };
 

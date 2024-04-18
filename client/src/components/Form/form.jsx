@@ -60,7 +60,7 @@ const Form = () => {
   }, [user]);
 
   return (
-    <Paper sx={styles.paper}>
+    <Paper sx={styles.paper} elevation={6}>
       <form
         autoComplete="off"
         noValidate

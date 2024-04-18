@@ -7,6 +7,7 @@ import {
   CardMedia,
   Button,
   Typography,
+  ButtonBase,
 } from "@mui/material";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -17,9 +18,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { setPostId } from "../../../reducers/post";
 import { likePost, deletePost } from "../../../reducers/posts";
 import { setUser } from "../../../reducers/auth";
+import { useNavigate } from "react-router-dom";
 
 const Post = ({ post }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [color, setColor] = useState(0);
   const user = useSelector((state) => state.user.user);
   const handleLikes = (id) => {
@@ -48,35 +51,46 @@ const Post = ({ post }) => {
     dispatch(setUser());
   }, []);
 
+  const openPost = () => {
+    navigate(`/posts/${post._id}`);
+  };
+
   return (
     <Card sx={styles.card} raised elavation={6}>
-      <CardMedia
-        sx={styles.cardMedia}
-        image={post.selectedFile || defaultPost}
-        title={post.title}
-      />
-      <CardContent sx={styles.cardContent}>
-        <Typography variant="h6" sx={styles.creator}>
-          {post.creator}
-        </Typography>
-        <Typography variant="body2" sx={styles.createdAt}>
-          {moment(post.createdAt).fromNow()}
-        </Typography>
-        <Typography variant="body2" sx={styles.tags}>
-          {post.tags.map((tag) => `#${tag} `)}
-        </Typography>
-        <Typography gutterBottom variant="h5" component="h2" sx={styles.title}>
-          {post.title}
-        </Typography>
-        <Typography
-          variant="body2"
-          color="textSecondary"
-          component="p"
-          sx={styles.message}
-        >
-          {post.message}
-        </Typography>
-      </CardContent>
+      <ButtonBase sx={styles.cardAction} onClick={openPost}>
+        <CardMedia
+          sx={styles.cardMedia}
+          image={post.selectedFile || defaultPost}
+          title={post.title}
+        />
+        <CardContent sx={styles.cardContent}>
+          <Typography variant="h6" sx={styles.creator}>
+            {post.creator}
+          </Typography>
+          <Typography variant="body2" sx={styles.createdAt}>
+            {moment(post.createdAt).fromNow()}
+          </Typography>
+          <Typography variant="body2" sx={styles.tags}>
+            {post.tags.map((tag) => `#${tag} `)}
+          </Typography>
+          <Typography
+            gutterBottom
+            variant="h5"
+            component="h2"
+            sx={styles.title}
+          >
+            {post.title}
+          </Typography>
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            component="p"
+            sx={styles.message}
+          >
+            {post.message}
+          </Typography>
+        </CardContent>
+      </ButtonBase>
       <CardActions>
         <Button
           size="small"
