@@ -1,0 +1,16 @@
+.app-container {
+  display: flex;
+  height: 100vh;
+}
+
+.channel-list-container {
+  flex: 0 0 20%;
+  border-right: 1px solid #ccc;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.channel-container {
+  flex: 1;
+  padding: 20px;
+}

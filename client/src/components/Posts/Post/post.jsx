@@ -48,6 +48,9 @@ const Post = ({ post }) => {
       return likedBy == user;
     });
     setColor(newLikes.length);
+  }, [user]);
+
+  useEffect(() => {
     dispatch(setUser());
   }, []);
 

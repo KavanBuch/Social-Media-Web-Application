@@ -67,3 +67,7 @@ export const logoutUser = () => {
 export const getCurrentUser = () => {
   return axios.post(`${url}/currentUser`, {}, { withCredentials: true });
 };
+
+export const userExists = (users) => {
+  return axios.post(`${url}/userExists`, { users }, { withCredentials: true });
+};

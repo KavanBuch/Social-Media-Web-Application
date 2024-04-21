@@ -17,6 +17,9 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { setUser } from "../../reducers/auth";
 import { useDispatch } from "react-redux";
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies();
 
 const validationSchema = Yup.object().shape({
   firstName: Yup.string().required("First name is required"),
@@ -84,6 +87,8 @@ const Auth = () => {
       success = message.data.success;
       if (success) {
         localStorage.setItem("user", form.username);
+        cookies.set("token", message.data.token);
+        cookies.set("username", message.data.username);
         dispatch(setUser());
         return navigate("/");
       }
@@ -103,6 +108,8 @@ const Auth = () => {
         success = message.data.success;
         if (success) {
           localStorage.setItem("user", form.username);
+          cookies.set("token", message.data.token);
+          cookies.set("username", message.data.username);
           dispatch(setUser());
           return navigate("/");
         }
