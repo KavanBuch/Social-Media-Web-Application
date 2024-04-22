@@ -72,6 +72,10 @@ export const userExists = (users) => {
   return axios.post(`${url}/userExists`, { users }, { withCredentials: true });
 };
 
+export const emailExists = (email) => {
+  return axios.post(`${url}/emailExists`, { email }, { withCredentials: true });
+};
+
 export const getUserProfile = (username) => {
   return axios.post(
     `${url}/userProfile`,

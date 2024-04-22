@@ -1,7 +1,7 @@
 const styles = {
   paper: {
     padding: "20px",
-    marginBottom: "20px",
+    marginBottom: "2.5rem",
   },
   form: {
     display: "flex",

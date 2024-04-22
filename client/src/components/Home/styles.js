@@ -4,10 +4,10 @@ const theme = createTheme();
 const styles = {
   appBar: {
     borderRadius: 2,
-    marginBottom: "1rem",
+    marginBottom: "2.5rem",
     display: "flex",
     padding: theme.spacing(2),
-    marginTop: "2.5rem",
+    marginTop: "3rem",
   },
   textField: {
     marginRight: theme.spacing(2),

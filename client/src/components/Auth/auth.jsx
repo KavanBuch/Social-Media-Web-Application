@@ -18,18 +18,41 @@ import * as Yup from "yup";
 import { setUser } from "../../reducers/auth";
 import { useDispatch } from "react-redux";
 import Cookies from "universal-cookie";
+import { userExists, emailExists } from "../../api/index";
 
 const cookies = new Cookies();
 
 const validationSchema = Yup.object().shape({
-  firstName: Yup.string().required("First name is required"),
-  lastName: Yup.string().required("Last name is required"),
+  firstName: Yup.string()
+    .max(20, "At max 20 characters allowed")
+    .required("First name is required"),
+  lastName: Yup.string()
+    .max(20, "At max 20 characters allowed")
+    .required("Last name is required"),
   email: Yup.string()
     .email("Invalid email address")
+    .test("unique-email", "Email already in use", async (value) => {
+      try {
+        const { data } = await emailExists(value);
+        return data.error != undefined;
+      } catch (error) {
+        console.error("Error checking username uniqueness:", error);
+        return false;
+      }
+    })
     .required("Email is required"),
   username: Yup.string()
     .min(3, "Username must be at least 3 characters")
     .max(20, "Username cannot exceed 20 characters")
+    .test("unique-username", "Username is not available", async (value) => {
+      try {
+        const { data } = await userExists([value]);
+        return data.error != undefined;
+      } catch (error) {
+        console.error("Error checking username uniqueness:", error);
+        return false;
+      }
+    })
     .required("Username is required"),
   password: Yup.string()
     .min(6, "Password must be at least 6 characters")

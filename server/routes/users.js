@@ -70,6 +70,19 @@ router.post("/userExists", async (req, res) => {
   }
 });
 
+router.post("/emailExists", async (req, res) => {
+  let valid = true;
+  const { email } = req.body;
+  try {
+    const foundUser = await User.findOne({ email });
+    valid &= foundUser != undefined;
+    if (valid) return res.status(200).json({ success: "email already exists" });
+    res.status(200).json({ error: "email does not exist" });
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
+});
+
 router.post("/userProfile", async (req, res) => {
   try {
     const { username } = req.body;
