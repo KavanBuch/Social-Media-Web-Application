@@ -70,4 +70,33 @@ router.post("/userExists", async (req, res) => {
   }
 });
 
+router.post("/userProfile", async (req, res) => {
+  try {
+    const { username } = req.body;
+    const user = await User.findOne({ username });
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.patch("/updateProfile", async (req, res) => {
+  try {
+    const { firstName, lastName, email, profilePicture, username } = req.body;
+    const oldUser = await User.findOne({ username });
+    const updatedUser = {
+      firstName,
+      lastName,
+      email,
+      profilePicture,
+    };
+    const result = await User.findByIdAndUpdate(oldUser._id, updatedUser, {
+      new: true,
+    });
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 export default router;

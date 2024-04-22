@@ -71,3 +71,15 @@ export const getCurrentUser = () => {
 export const userExists = (users) => {
   return axios.post(`${url}/userExists`, { users }, { withCredentials: true });
 };
+
+export const getUserProfile = (username) => {
+  return axios.post(
+    `${url}/userProfile`,
+    { username },
+    { withCredentials: true }
+  );
+};
+
+export const updateProfile = (data) => {
+  return axios.patch(`${url}/updateProfile`, data, { withCredentials: true });
+};

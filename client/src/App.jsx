@@ -15,6 +15,7 @@ import { setUser } from "./reducers/auth";
 import Chats from "./components/Chats/Chats";
 import CreateChat from "./components/Chats/CreateChat";
 import { CircularProgress } from "@mui/material";
+import Porfile from "./components/Profile/Profile";
 
 function App() {
   const user = useSelector((state) => {
@@ -37,6 +38,7 @@ function App() {
         <Route path="/auth" element={!user ? <Auth /> : <Navigate to="/" />} />
         <Route path="/chats" element={<Chats />} />
         <Route path="/chats/new" element={<CreateChat />} />
+        <Route path="/profile" element={<Porfile />} />
       </Route>
     )
   );
