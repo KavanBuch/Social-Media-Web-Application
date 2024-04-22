@@ -7,11 +7,13 @@ import postsSlice from "./reducers/posts.js";
 import { combineReducers } from "redux";
 import postSlice from "./reducers/post.js";
 import userSlice from "./reducers/auth.js";
+import messageSlice from "./reducers/message.jsx";
 
 const reducers = combineReducers({
   posts: postsSlice,
   post: postSlice,
   user: userSlice,
+  message: messageSlice,
 });
 
 const store = configureStore({

@@ -3,7 +3,8 @@ import * as api from "../api/index";
 
 const initialState = {
   user: undefined,
-  isLoading: false,
+  isLoading: true,
+  isLoadingProfile: true,
   profile: null,
 };
 
@@ -30,22 +31,24 @@ export const userSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(setUser.pending, (state, action) => {
-      state.isLoading = true;
-    });
     builder.addCase(setUser.fulfilled, (state, action) => {
       state.isLoading = false;
       localStorage.setItem("user", action.payload);
       const loggedInuser = localStorage.getItem("user");
       state.user = loggedInuser ? loggedInuser : undefined;
     });
+    builder.addCase(setUser.pending, (state, action) => {
+      state.isLoading = true;
+    });
     builder.addCase(getUserProfile.fulfilled, (state, action) => {
-      state.isLoading = false;
+      state.isLoadingProfile = false;
       state.profile = action.payload;
     });
     builder.addCase(updateProfile.fulfilled, (state, action) => {
-      state.isLoading = false;
       state.profile = action.payload;
+    });
+    builder.addCase(getUserProfile.pending, (state, action) => {
+      state.isLoadingProfile = true;
     });
   },
 });

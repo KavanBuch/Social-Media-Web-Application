@@ -8,16 +8,18 @@ import {
   Grid,
   Box,
   Alert,
-  CircularProgress,
 } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { setUser, getUserProfile, updateProfile } from "../../reducers/auth";
 import FileBase from "react-file-base64";
 import CheckIcon from "@mui/icons-material/Check";
+import { useNavigate } from "react-router-dom";
+import CircularProcess from "../CircularProcess";
 
 const UserProfile = () => {
   const [editMode, setEditMode] = useState(false);
+  const navigate = useNavigate();
   const [success, setSuccess] = useState(undefined);
   const user = useSelector((state) => {
     return state.user.user;
@@ -25,15 +27,20 @@ const UserProfile = () => {
   const profile = useSelector((state) => {
     return state.user.profile;
   });
+  const isLoading = useSelector((state) => state.user.isLoading);
+  const isLoadingProfile = useSelector((state) => state.user.isLoadingProfile);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(setUser());
   }, []);
 
   useEffect(() => {
-    if (!user) return;
+    if (isLoading) return;
+    if (!user) {
+      navigate("/auth");
+    }
     dispatch(getUserProfile(user));
-  }, [user]);
+  }, [isLoading]);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -71,8 +78,8 @@ const UserProfile = () => {
     setEditMode(false);
     setSuccess("Updated profile successfully!!");
   };
-  if (!profile) {
-    return <CircularProgress />;
+  if (isLoadingProfile) {
+    return <CircularProcess />;
   }
   return (
     <Grid
@@ -89,13 +96,6 @@ const UserProfile = () => {
               {success}
             </Alert>
           )}
-          <Typography
-            variant="h4"
-            mb={2}
-            sx={{ textAlign: "center", color: "blue" }}
-          >
-            Welcome, {user}
-          </Typography>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Box display="flex" justifyContent="center" mb={2}>

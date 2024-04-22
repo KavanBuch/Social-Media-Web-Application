@@ -16,9 +16,11 @@ import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { setUser } from "../../reducers/auth";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Cookies from "universal-cookie";
 import { userExists, emailExists } from "../../api/index";
+import { setMessage } from "../../reducers/message";
+import CircularProcess from "../CircularProcess";
 
 const cookies = new Cookies();
 
@@ -78,6 +80,8 @@ const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isSignup, setIsSignUp] = useState(false);
   const [correctCredentials, setCorrectCredentials] = useState(true);
+  const isLoading = useSelector((state) => state.user.isLoading);
+  const user = useSelector((state) => state.user.user);
   const handleShowPassword = () => {
     setShowPassword((prevShowPassword) => {
       return !prevShowPassword;
@@ -134,6 +138,7 @@ const Auth = () => {
           cookies.set("token", message.data.token);
           cookies.set("username", message.data.username);
           dispatch(setUser());
+          dispatch(setMessage(`Welcome,${form.username}`));
           return navigate("/");
         }
       } catch (error) {
@@ -145,7 +150,13 @@ const Auth = () => {
 
   useEffect(() => {
     setCorrectCredentials(true);
+    dispatch(setUser());
   }, []);
+  if (isLoading) return <CircularProcess />;
+  if (user) {
+    navigate("/posts");
+    return null;
+  }
 
   return (
     <Container component="main" maxWidth="xs">

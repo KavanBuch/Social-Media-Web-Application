@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AppBar,
   Button,
@@ -7,6 +7,8 @@ import {
   Chip,
   Typography,
   Alert,
+  Container,
+  Box,
 } from "@mui/material";
 import styles from "./styles";
 import * as api from "../../api/index";
@@ -25,7 +27,6 @@ function CreateChat() {
   const navigate = useNavigate();
   const token = cookies.get("token");
   const client = StreamChat.getInstance(import.meta.env.VITE_API_KEY);
-
   const handleDeleteChip = (memberToDelete) => {
     setMembers(
       members.filter((member) => {
@@ -33,6 +34,12 @@ function CreateChat() {
       })
     );
   };
+  useEffect(() => {
+    if (!username) {
+      navigate("/auth");
+      return;
+    }
+  });
   const handleAddChip = (member) => {
     setMembers([...members, member]);
   };
@@ -78,62 +85,71 @@ function CreateChat() {
     }
   };
   return (
-    <>
-      <AppBar
-        position="static"
-        color="inherit"
-        elevation={6}
-        sx={styles.appBar}
+    <Container maxWidth="sm">
+      <Box
+        sx={{
+          marginTop: "2rem",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
       >
-        <Typography variant="h5">Create A Channel</Typography>
-        {error && <Alert severity="error">{error}</Alert>}
-        <TextField
-          sx={styles.textField}
-          name="channel"
-          variant="outlined"
-          label="Channel Name"
-          fullWidth
-          value={channel}
-          onChange={(e) => setChannel(e.target.value)}
-        />
-        <Autocomplete
-          multiple
-          freeSolo
-          value={members}
-          options={[]}
-          renderTags={(value, getMemberProps) =>
-            value.map((option, index) => (
-              <Chip
-                label={option}
-                {...getMemberProps({ index })}
-                onDelete={() => handleDeleteChip(option)}
-              />
-            ))
-          }
-          renderInput={(params) => (
-            <TextField
-              sx={styles.textField}
-              {...params}
-              value={members}
-              variant="outlined"
-              label="Add Members"
-              placeholder="Type and press enter"
-              onChange={(e) => setMember(e.target.value)}
-              onKeyDown={(e) => handleKeyPress(e, true)}
-            />
-          )}
-        />
-
-        <Button
-          sx={styles.button}
-          onClick={createChannel}
-          variant="contained"
-          color="primary"
+        <AppBar
+          position="static"
+          color="inherit"
+          elevation={6}
+          sx={styles.appBar}
         >
-          Create
-        </Button>
-      </AppBar>
-    </>
+          <Typography variant="h5">Create A Channel</Typography>
+          {error && <Alert severity="error">{error}</Alert>}
+          <TextField
+            sx={styles.textField}
+            name="channel"
+            variant="outlined"
+            label="Channel Name"
+            fullWidth
+            value={channel}
+            onChange={(e) => setChannel(e.target.value)}
+          />
+          <Autocomplete
+            multiple
+            freeSolo
+            value={members}
+            options={[]}
+            renderTags={(value, getMemberProps) =>
+              value.map((option, index) => (
+                <Chip
+                  label={option}
+                  {...getMemberProps({ index })}
+                  onDelete={() => handleDeleteChip(option)}
+                />
+              ))
+            }
+            renderInput={(params) => (
+              <TextField
+                sx={styles.textField}
+                {...params}
+                value={members}
+                variant="outlined"
+                label="Add Members"
+                placeholder="Type and press enter"
+                onChange={(e) => setMember(e.target.value)}
+                onKeyDown={(e) => handleKeyPress(e, true)}
+              />
+            )}
+          />
+
+          <Button
+            sx={styles.button}
+            onClick={createChannel}
+            variant="contained"
+            color="primary"
+          >
+            Create
+          </Button>
+        </AppBar>
+      </Box>
+    </Container>
   );
 }
 

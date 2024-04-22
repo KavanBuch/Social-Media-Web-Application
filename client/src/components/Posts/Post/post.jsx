@@ -13,7 +13,7 @@ import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import moment from "moment";
-import defaultPost from "../../../images/defaultPost.jpg";
+import defaultPost from "/images/defaultPost.jpg";
 import { useSelector, useDispatch } from "react-redux";
 import { setPostId } from "../../../reducers/post";
 import { likePost, deletePost } from "../../../reducers/posts";

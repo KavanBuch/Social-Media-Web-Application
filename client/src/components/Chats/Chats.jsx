@@ -29,7 +29,13 @@ const App = () => {
   const options = { presence: true, state: true };
   const sort = { last_message_at: -1 };
 
-  if (!token) return;
+  useEffect(() => {
+    if (!token) {
+      navigate("/auth");
+      return;
+    }
+  }, []);
+
   client
     .connectUser(
       {
@@ -43,11 +49,9 @@ const App = () => {
     .catch((e) => {
       console.log(e);
     });
-
   const handleClick = () => {
     navigate("/chats/new");
   };
-
   return (
     <div className="app-container">
       <Chat client={client} theme="messaging light">

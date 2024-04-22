@@ -1,7 +1,10 @@
+import { Padding } from "@mui/icons-material";
+
 const styles = {
   appBar: {
     borderRadius: 15,
-    margin: "30px 0",
+    margin: "10px 0",
+    paddingBottom: "5px",
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
@@ -19,11 +22,17 @@ const styles = {
     justifyContent: "flex-end",
     width: "400px",
   },
+  actions: {
+    marginLeft: "auto",
+    marginRight: "-10rem",
+    display: "flex",
+    alignItems: "center",
+  },
   profile: {
     display: "flex",
-    justifyContent: "space-between",
-    width: "400px",
+    alignItems: "center",
   },
+
   userName: {
     display: "flex",
     alignItems: "center",
@@ -31,6 +40,7 @@ const styles = {
   brandContainer: {
     display: "flex",
     alignItems: "center",
+    flexGrow: 1,
   },
   purple: {},
 };

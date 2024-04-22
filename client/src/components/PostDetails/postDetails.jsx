@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import { Paper, Typography, CircularProgress, Divider } from "@mui/material";
-import defaultPost from "../../images/defaultPost.jpg";
+import { Paper, Typography, Divider } from "@mui/material";
+import defaultPost from "/images/defaultPost.jpg";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getPost } from "../../reducers/posts";
@@ -9,6 +9,7 @@ import styles from "./styles";
 import { fetchPostsBySearch } from "../../reducers/posts";
 import { useNavigate } from "react-router-dom";
 import CommentSection from "./commentSection";
+import CircularProcess from "../CircularProcess";
 
 const postDetails = () => {
   const { id } = useParams();
@@ -32,11 +33,7 @@ const postDetails = () => {
   }, [post]);
 
   if (!post) {
-    return (
-      <Paper elevation={6} sx={styles.loadingPaper}>
-        <CircularProgress size="7em" />
-      </Paper>
-    );
+    return <CircularProcess />;
   }
 
   const recommendedPosts = posts.filter((post) => {
