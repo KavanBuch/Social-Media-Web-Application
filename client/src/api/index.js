@@ -1,5 +1,5 @@
 import axios from "axios";
-const url = "http://localhost:80";
+const url = import.meta.env.VITE_SERVER_URL;
 
 export const fetchPosts = (page) => {
   return axios.get(`${url}/posts?page=${page}`, { withCredentials: true });

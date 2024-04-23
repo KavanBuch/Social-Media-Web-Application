@@ -24,6 +24,9 @@ const CommentSection = ({ post }) => {
   };
 
   useEffect(() => {
+    setComments(post.comments);
+  }, [post]);
+  useEffect(() => {
     dispatch(setUser());
   }, []);
   return (
