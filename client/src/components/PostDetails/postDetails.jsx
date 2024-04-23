@@ -10,6 +10,7 @@ import { fetchPostsBySearch } from "../../reducers/posts";
 import { useNavigate } from "react-router-dom";
 import CommentSection from "./commentSection";
 import CircularProcess from "../CircularProcess";
+import FlashMesaage from "../FlashMessage";
 
 const postDetails = () => {
   const { id } = useParams();
@@ -21,8 +22,15 @@ const postDetails = () => {
   const posts = useSelector((state) => {
     return state.posts.posts;
   });
+  const message = useSelector((state) => state.message.message);
   useEffect(() => {
-    dispatch(getPost(id));
+    const fetch = async () => {
+      const result = await dispatch(getPost(id));
+      if (result.error) {
+        navigate("/notfound");
+      }
+    };
+    fetch();
   }, [id]);
 
   useEffect(() => {
@@ -45,73 +53,76 @@ const postDetails = () => {
   };
 
   return (
-    <Paper sx={styles.paper} elevation={6}>
-      <div style={styles.card}>
-        <div style={styles.section}>
-          <Typography variant="h3" component="h2">
-            {post.title}
-          </Typography>
-          <Typography
-            gutterBottom
-            variant="h6"
-            color="textSecondary"
-            component="h2"
-          >
-            {post.tags.map((tag) => `#${tag} `)}
-          </Typography>
-          <Typography gutterBottom variant="body1" component="p">
-            {post.message}
-          </Typography>
-          <Typography variant="h6">Created by: {post.creator}</Typography>
-          <Typography variant="body1">
-            {moment(post.createdAt).fromNow()}
-          </Typography>
-          <Divider style={{ margin: "20px 0" }} />
-          <CommentSection post={post} />
-          <Divider style={{ margin: "20px 0" }} />
-        </div>
-        <div style={styles.imageSection}>
-          <img
-            style={styles.media}
-            src={post.selectedFile || defaultPost}
-            alt={post.title}
-          />
-        </div>
-      </div>
-      {!!recommendedPosts.length && (
-        <div style={styles.section}>
-          <Typography gutterBottom variant="h5">
-            You might also like:
-          </Typography>
-          <Divider />
-          <div style={styles.recommendedPosts}>
-            {recommendedPosts.map(
-              ({ title, name, message, likes, selectedFile, _id }) => (
-                <div
-                  style={{ margin: "20px", cursor: "pointer" }}
-                  onClick={() => openPost(_id)}
-                  key={_id}
-                >
-                  <Typography gutterBottom variant="h6">
-                    {title}
-                  </Typography>
-                  <Typography gutterBottom variant="subtitle2">
-                    {name}
-                  </Typography>
-                  <Typography gutterBottom variant="subtitle2">
-                    {message}
-                  </Typography>
-                  <Typography gutterBottom variant="subtitle1">
-                    Likes: {likes.length}
-                  </Typography>
-                  <img src={selectedFile || defaultPost} width="200px" />
-                </div>
-              )
-            )}
+    <>
+      {message && <FlashMesaage message={message} />}
+      <Paper sx={styles.paper} elevation={6}>
+        <div style={styles.card}>
+          <div style={styles.section}>
+            <Typography variant="h3" component="h2">
+              {post.title}
+            </Typography>
+            <Typography
+              gutterBottom
+              variant="h6"
+              color="textSecondary"
+              component="h2"
+            >
+              {post.tags.map((tag) => `#${tag} `)}
+            </Typography>
+            <Typography gutterBottom variant="body1" component="p">
+              {post.message}
+            </Typography>
+            <Typography variant="h6">Created by: {post.creator}</Typography>
+            <Typography variant="body1">
+              {moment(post.createdAt).fromNow()}
+            </Typography>
+            <Divider style={{ margin: "20px 0" }} />
+            <CommentSection post={post} />
+            <Divider style={{ margin: "20px 0" }} />
+          </div>
+          <div style={styles.imageSection}>
+            <img
+              style={styles.media}
+              src={post.selectedFile || defaultPost}
+              alt={post.title}
+            />
           </div>
         </div>
-      )}
-    </Paper>
+        {!!recommendedPosts.length && (
+          <div style={styles.section}>
+            <Typography gutterBottom variant="h5">
+              You might also like:
+            </Typography>
+            <Divider />
+            <div style={styles.recommendedPosts}>
+              {recommendedPosts.map(
+                ({ title, name, message, likes, selectedFile, _id }) => (
+                  <div
+                    style={{ margin: "20px", cursor: "pointer" }}
+                    onClick={() => openPost(_id)}
+                    key={_id}
+                  >
+                    <Typography gutterBottom variant="h6">
+                      {title}
+                    </Typography>
+                    <Typography gutterBottom variant="subtitle2">
+                      {name}
+                    </Typography>
+                    <Typography gutterBottom variant="subtitle2">
+                      {message}
+                    </Typography>
+                    <Typography gutterBottom variant="subtitle1">
+                      Likes: {likes.length}
+                    </Typography>
+                    <img src={selectedFile || defaultPost} width="200px" />
+                  </div>
+                )
+              )}
+            </div>
+          </div>
+        )}
+      </Paper>
+    </>
   );
 };
 

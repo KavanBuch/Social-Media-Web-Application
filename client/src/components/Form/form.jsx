@@ -6,9 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { createPost, updatePost } from "../../reducers/posts";
 import { setPostId } from "../../reducers/post";
 import { setUser } from "../../reducers/auth";
+import { useNavigate } from "react-router-dom";
 
 const Form = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [loadButton, setLoadButton] = useState(false);
   const user = useSelector((state) => state.user.user);
   const [postData, setPostData] = useState({
     creator: user,
@@ -34,13 +37,17 @@ const Form = () => {
   const post = posts.find((post) => {
     return post._id == post_id;
   });
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+    setLoadButton(true);
     e.preventDefault();
     if (post_id) {
-      dispatch(updatePost({ post_id, postData }));
+      const result = await dispatch(updatePost({ post_id, postData }));
+      navigate(`/posts/${result.payload._id}`);
     } else {
-      dispatch(createPost(postData));
+      const result = await dispatch(createPost(postData));
+      navigate(`/posts/${result.payload._id}`);
     }
+    setLoadButton(false);
     clear();
   };
 
@@ -50,6 +57,7 @@ const Form = () => {
 
   useEffect(() => {
     dispatch(setUser());
+    setLoadButton(false);
   }, []);
 
   useEffect(() => {
@@ -132,7 +140,11 @@ const Form = () => {
           sx={styles.submitButton}
           disabled={!user}
         >
-          {user ? "Submit" : "LogIn to Create a Post"}
+          {user
+            ? !loadButton
+              ? "Submit"
+              : "Making Changes..."
+            : "LogIn to Create a Post"}
         </Button>
         <Button
           variant="contained"

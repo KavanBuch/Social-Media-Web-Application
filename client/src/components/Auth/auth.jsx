@@ -78,6 +78,7 @@ const Auth = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [loadButton, setLoadButton] = useState(false);
   const [isSignup, setIsSignUp] = useState(false);
   const [correctCredentials, setCorrectCredentials] = useState(true);
   const isLoading = useSelector((state) => state.user.isLoading);
@@ -109,6 +110,7 @@ const Auth = () => {
     validateOnChange: true,
     validateOnBlur: true,
     onSubmit: async (form) => {
+      setLoadButton(true);
       let success = null;
       const message = await registerUser(form);
       success = message.data.success;
@@ -117,6 +119,8 @@ const Auth = () => {
         cookies.set("token", message.data.token);
         cookies.set("username", message.data.username);
         dispatch(setUser());
+        dispatch(setMessage(`Welcome,${form.username}`));
+        setLoadButton(false);
         return navigate("/");
       }
     },
@@ -131,6 +135,7 @@ const Auth = () => {
     onSubmit: async (form) => {
       try {
         let success = null;
+        setLoadButton(true);
         const message = await loginUser(form);
         success = message.data.success;
         if (success) {
@@ -139,6 +144,7 @@ const Auth = () => {
           cookies.set("username", message.data.username);
           dispatch(setUser());
           dispatch(setMessage(`Welcome,${form.username}`));
+          setLoadButton(false);
           return navigate("/");
         }
       } catch (error) {
@@ -151,6 +157,7 @@ const Auth = () => {
   useEffect(() => {
     setCorrectCredentials(true);
     dispatch(setUser());
+    setLoadButton(false);
   }, []);
   if (isLoading) return <CircularProcess />;
   if (user) {
@@ -288,7 +295,13 @@ const Auth = () => {
             color="primary"
             sx={styles.submit}
           >
-            {isSignup ? "Sign Up" : "Sign In"}
+            {isSignup
+              ? !loadButton
+                ? "Sign Up"
+                : "Signing Up..."
+              : !loadButton
+              ? "Sign In"
+              : "Signing In..."}
           </Button>
           <Grid container justify="flex-end">
             <Grid item>

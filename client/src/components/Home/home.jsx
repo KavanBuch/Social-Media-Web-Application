@@ -44,7 +44,6 @@ const Home = () => {
 
   const searchPost = () => {
     if (search.trim() || tags.length) {
-      console.log(search);
       dispatch(fetchPostsBySearch({ search, tags: tags.join(",") }));
       navigate(
         `/posts/search?searchQuery=${search || "none"}&tags=${tags.join(",")}`

@@ -19,6 +19,7 @@ import { setPostId } from "../../../reducers/post";
 import { likePost, deletePost } from "../../../reducers/posts";
 import { setUser } from "../../../reducers/auth";
 import { useNavigate } from "react-router-dom";
+import { setMessage } from "../../../reducers/message";
 
 const Post = ({ post }) => {
   const dispatch = useDispatch();
@@ -41,6 +42,8 @@ const Post = ({ post }) => {
 
   const handleDeletePost = (id) => {
     dispatch(deletePost(id));
+    dispatch(setMessage("Deleted post successfully..."));
+    navigate("/");
   };
 
   useEffect(() => {
