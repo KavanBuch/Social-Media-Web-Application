@@ -73,7 +73,11 @@ const Navbar = () => {
     <AppBar sx={styles.appBar} position="static" color="inherit">
       <Toolbar sx={styles.toolbar}>
         <Typography
-          sx={styles.heading}
+          sx={{
+            ...styles.heading,
+            fontSize: { xs: "2.5rem", sm: "4rem" },
+            marginLeft: { xs: "1rem", sm: "0rem" },
+          }}
           variant="h2"
           align="center"
           component={Link}
@@ -142,6 +146,7 @@ const Navbar = () => {
               to="/auth"
               variant="contained"
               color="primary"
+              sx={{ marginLeft: { xs: "-18rem", sm: "0rem" } }}
             >
               SignIn
             </Button>
