@@ -30,15 +30,18 @@ const Navbar = () => {
   const user = useSelector((state) => state.user.user);
   const isLoading = useSelector((state) => state.user.isLoading);
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
+  const [show, setShow] = useState(true);
 
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
+    setShow(false);
   };
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+    setShow(true);
   };
   const handleLogout = () => {
     setLogoutDialogOpen(true);
@@ -82,18 +85,26 @@ const Navbar = () => {
           {user && (
             <div style={styles.profile}>
               <IconButton onClick={handleMenuOpen}>
-                <Avatar alt={user} src="" />
-                <Typography
-                  variant="h6"
+                <Avatar
+                  alt={user}
+                  src=""
                   sx={{
-                    marginLeft: "1rem",
-                    color: "rgba(0,183,255, 1)",
-                    fontWeight: "bold",
+                    marginLeft: { xs: "-25rem", sm: "0" },
+                    display: { xs: !show ? "none" : "block", sm: "block" },
                   }}
-                >
-                  {user}
-                </Typography>
+                />
               </IconButton>
+              <Typography
+                variant="h6"
+                sx={{
+                  marginLeft: "1rem",
+                  color: "rgba(0,183,255, 1)",
+                  fontWeight: "bold",
+                  display: { xs: "none", sm: "block" },
+                }}
+              >
+                {user}
+              </Typography>
               <Menu
                 id="profile-menu"
                 anchorEl={anchorEl}
