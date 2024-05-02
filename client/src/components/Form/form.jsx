@@ -7,6 +7,7 @@ import { createPost, updatePost } from "../../reducers/posts";
 import { setPostId } from "../../reducers/post";
 import { setUser } from "../../reducers/auth";
 import { useNavigate } from "react-router-dom";
+import DOMPurify from "dompurify";
 
 const Form = () => {
   const dispatch = useDispatch();
@@ -40,11 +41,23 @@ const Form = () => {
   const handleSubmit = async (e) => {
     setLoadButton(true);
     e.preventDefault();
+    const sanitizeObject = (obj) => {
+      const sanitizedObj = {};
+      Object.keys(obj).forEach((key) => {
+        if (typeof obj[key] === "string") {
+          sanitizedObj[key] = DOMPurify.sanitize(obj[key]);
+        } else {
+          sanitizedObj[key] = obj[key];
+        }
+      });
+      return sanitizedObj;
+    };
+    const newPostData = sanitizeObject(postData);
     if (post_id) {
-      const result = await dispatch(updatePost({ post_id, postData }));
+      const result = await dispatch(updatePost({ post_id, newPostData }));
       navigate(`/posts/${result.payload._id}`);
     } else {
-      const result = await dispatch(createPost(postData));
+      const result = await dispatch(createPost(newPostData));
       navigate(`/posts/${result.payload._id}`);
     }
     setLoadButton(false);

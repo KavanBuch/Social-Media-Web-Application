@@ -48,8 +48,8 @@ export const commentPost = createAsyncThunk(
 
 export const updatePost = createAsyncThunk(
   "updatePost",
-  async ({ post_id, postData }) => {
-    const { data } = await api.updatePost(post_id, postData);
+  async ({ post_id, newPostData }) => {
+    const { data } = await api.updatePost(post_id, newPostData);
     return data;
   }
 );
