@@ -10,6 +10,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import User from "./models/users.js";
 import mongoStore from "connect-mongo";
+import sanitize from "mongo-sanitize";
 
 dotenv.config();
 
@@ -26,6 +27,19 @@ app.use(
     credentials: true,
   })
 );
+
+app.use((req, res, next) => {
+  if (req.body) {
+    req.body = sanitize(req.body);
+  }
+  if (req.query) {
+    req.query = sanitize(req.query);
+  }
+  if (req.params) {
+    req.params = sanitize(req.params);
+  }
+  next();
+});
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
