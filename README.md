@@ -48,9 +48,17 @@ Search for posts using titles and tags to easily find content relevant to your i
 
 ![Search Posts](https://github.com/KavanBuch/Social-Media-Web-Application/assets/75678658/d61b0eb7-0e84-461d-95bc-b72d2e82b0dd)
 
+### Logout
+
+![image](https://github.com/KavanBuch/Social-Media-Web-Application/assets/75678658/8d3f2c63-b284-4f97-a119-c694050c7331)
+
+
+
 ---
 
-## Run the Project Locally
+## To view the live project, see the deployed app in about section.
+
+## To Run the Project Locally
 
 ### Server Setup
 ```
@@ -66,3 +74,19 @@ npm install
 npm run dev
 ```
 
+## Running the Project with Docker
+
+Use Docker to run the project if you do not have the necessary software dependencies installed locally. Docker provides an isolated and consistent environment, ensuring the application functions correctly regardless of local configurations. Below are the steps to set up both the server and the client:
+
+1. **Pull the Docker Image**:
+   Download the Docker image for the server from Docker Hub:
+   ```
+   docker pull kavan02/instander-api
+   docker run -p 80:80 kavan02/instander-api
+   ```
+   Download the Docker image for the client from Docker Hub:
+   ```
+   docker pull kavan02/instander
+   docker run -p 3000:3000 kavan02/instander
+   ```
+2. In both cases, create .env file in server and client and use your corresponding variables.
