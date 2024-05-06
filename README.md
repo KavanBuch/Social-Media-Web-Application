@@ -16,7 +16,8 @@ Register and log in to the app with robust validations both on the frontend and 
 ### Home Page
 View all posts on the landing page. Features include creating, editing, and deleting posts you own.
 
-![Home Page](https://github.com/KavanBuch/Social-Media-Web-Application/assets/75678658/1c625419-b6e9-4d34-853b-e9bef31a6360)
+<img alt="home2" src="https://github.com/KavanBuch/Social-Media-Web-Application/assets/75678658/ade48cb1-e6dd-48fd-a9cb-f945755cd4bc">
+
 <br>
 
 ### Post Details Page
